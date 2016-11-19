@@ -31,6 +31,34 @@ explore:  facebook {
     relationship:  one_to_one
     sql_on: ${fb_ads.creative__id} = ${fb_creative.id} ;;
   }
+  join: site_visits {
+    type:  left_outer
+    relationship:  many_to_many
+    sql_on:
+      ${site_visits.source} = 'facebook'
+      AND
+      ${fb_insights.date_start_date} = ${site_visits.first_visit_date};;
+  }
+  join: heap {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${site_visits.id} = ${heap.user_id}
+      AND ${site_visits.type} = 'heap';;
+  }
+  join: yandex {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${site_visits.id} = ${yandex.visit_id}
+      AND ${site_visits.type} = 'yandex';;
+  }
+  join: ga_traffic_sources {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${site_visits.id} = ${ga_traffic_sources._rjm_record_hash}
+      AND ${site_visits.type} = 'google';;
+  }
+
+
 #   join:  fb_conversion_specs {
 #     relationship: one_to_one
 #     sql_on: ${fb_ads.id} =
@@ -52,24 +80,3 @@ explore:  facebook {
 #       ${facebook.ends_raw};;
 #   }
 # }
-
-explore:  site_visits {
-  join: heap {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${site_visits.id} = ${heap.user_id}
-    AND ${site_visits.type} = 'heap';;
-  }
-  join: yandex {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${site_visits.id} = ${yandex.visit_id}
-    AND ${site_visits.type} = 'yandex';;
-  }
-  join: calendar {
-    type:  inner
-    relationship:  many_to_one
-    sql_on:  ${site_visits.first_visit_date} = ${calendar.at_raw};;
-  }
-
-}

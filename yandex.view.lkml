@@ -72,4 +72,8 @@ view: yandex {
     label: "Count Visits"
     drill_fields: []
   }
+  measure:  total_users {
+    type:  sum
+    sql:  ${users} ;;
+  }
 }

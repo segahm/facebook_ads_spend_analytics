@@ -63,7 +63,12 @@ view: heap {
 
   dimension: initial_utm_term {
     type: string
-    sql: ${TABLE}.initial_utm_term ;;
+    sql:
+    CASE
+      WHEN traffic_sources ILIKE '%fbad%'
+      THEN array_to_string(regexp_matches(traffic_sources,'fbad\%3D([^&]+)'),',')
+      ELSE ${TABLE}.initial_utm_term
+    END;;
   }
 
   dimension_group: joindate {

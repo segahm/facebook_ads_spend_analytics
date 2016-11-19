@@ -138,7 +138,7 @@ view: fb_insights {
 
   dimension_group: date_start {
     type: time
-    timeframes: [time, date, week, month, raw]
+    timeframes: [date, week, month, raw]
     sql: ${TABLE}.date_start ;;
   }
 #
