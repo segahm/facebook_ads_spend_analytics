@@ -61,15 +61,15 @@ view: heap {
     sql: ${TABLE}.initial_utm_source ;;
   }
 
-  dimension: initial_utm_term {
-    type: string
-    sql:
-    CASE
-      WHEN traffic_sources ILIKE '%fbad%'
-      THEN array_to_string(regexp_matches(traffic_sources,'fbad\%3D([^&]+)'),',')
-      ELSE ${TABLE}.initial_utm_term
-    END;;
-  }
+#   dimension: initial_utm_term {
+#     type: string
+#     sql:
+#     CASE
+#       WHEN initial_landing_page ILIKE '%fbad%'
+#       THEN array_to_string(regexp_matches(initial_landing_page,'fbad\%3D([^&]+)'),',')
+#       ELSE ${TABLE}.initial_utm_term
+#     END;;
+#   }
 
   dimension_group: joindate {
     type: time

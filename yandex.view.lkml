@@ -1,3 +1,4 @@
+explore: yandex {}
 view: yandex {
   sql_table_name: public.yandex ;;
   dimension: visit_id  {
@@ -45,6 +46,14 @@ view: yandex {
   dimension: traffic_sources {
     type: string
     sql: ${TABLE}.traffic_sources ;;
+  }
+
+  dimension: custom_term {
+    type: string
+    sql:
+      CASE WHEN ${landing_page_path} LIKE '%fbad%'
+            THEN SPLIT_PART(SPLIT_PART(${landing_page_path},'fbad=',2),'&',1)
+       ELSE NULL END ;;
   }
 
   dimension: users {

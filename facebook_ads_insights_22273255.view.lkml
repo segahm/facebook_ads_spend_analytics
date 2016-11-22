@@ -41,6 +41,16 @@ view: fb_insights {
     sql: ${TABLE}.ad_id ;;
   }
 
+  measure: earliest_action_date {
+    type: date
+    sql: MIN(${date_start_date}) ;;
+  }
+
+  measure: latest_action_date {
+    type: date
+    sql: MAX(${date_start_date}) ;;
+  }
+
   dimension: ad_name {
     type: string
     sql: ${TABLE}.ad_name ;;
@@ -118,21 +128,25 @@ view: fb_insights {
 
   dimension: cpc {
     type: number
+    hidden: yes
     sql: ${TABLE}.cpc ;;
   }
 
   dimension: cpm {
     type: number
+    hidden: yes
     sql: ${TABLE}.cpm ;;
   }
 
   dimension: cpp {
     type: number
+    hidden: yes
     sql: ${TABLE}.cpp ;;
   }
 
   dimension: ctr {
     type: number
+    hidden: yes
     sql: ${TABLE}.ctr ;;
   }
 
@@ -193,13 +207,14 @@ view: fb_insights {
     sql: ${TABLE}.newsfeed_impressions ;;
   }
 
-  dimension: objective {
-    type: string
-    sql: ${TABLE}.objective ;;
-  }
+#   dimension: objective {
+#     type: string
+#     sql: ${TABLE}.objective ;;
+#   }
 
   dimension: reach {
     type: number
+    hidden: yes
     sql: ${TABLE}.reach ;;
   }
 
@@ -255,6 +270,7 @@ view: fb_insights {
 
   dimension: actions {
     type: number
+    hidden:  yes
     sql: ${TABLE}.total_actions ;;
   }
 
@@ -310,16 +326,21 @@ view: fb_insights {
 
 #   AGGREGATED MEASURES
 
-  measure:  total_website_clicks {
-    type:  sum
-    sql:  ${website_clicks} ;;
+  measure: total_website_clicks {
+    type: sum
+    sql: ${website_clicks} ;;
+  }
+
+  measure:  total_spend_on_clicks {
+    type: sum
+    value_format_name: usd_0
+    sql: ${cpc}*${clicks}  ;;
   }
 
   measure: total_clicks {
     type:  sum
     sql: ${clicks} ;;
   }
-
   measure:  total_spend {
     value_format_name: usd_0
     type:  sum
@@ -331,10 +352,15 @@ view: fb_insights {
     sql: ${TABLE}.total_actions ;;
   }
 
-
-#   - measure: total_clicks
-#     type: sum
-#     sql: ${TABLE}.clicks
+  measure: avg_ctr {
+    value_format_name: usd
+    type: average
+    sql: ${TABLE}.ctr ;;
+  }
+  measure:  total_impressions {
+    type: sum
+    sql: ${impressions} ;;
+  }
 #
 #   - measure: total_impressions
 #     type: sum
@@ -405,9 +431,4 @@ view: fb_insights {
 #     sql: ${TABLE}.cost_per_inline_link_click
 
 ##########
-
-  measure: count {
-    type: count
-    drill_fields: [ad_name, adset_name, campaign_name]
-  }
 }

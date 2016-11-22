@@ -51,6 +51,7 @@ view: site_visits {
   }
   measure: count {
     type:  count_distinct
+    label: "Non-unique Count"
     sql:
       (CASE WHEN ${type} = 'yandex' THEN ${yandex.visit_id}
       WHEN ${type} = 'heap' THEN ${heap.user_id}

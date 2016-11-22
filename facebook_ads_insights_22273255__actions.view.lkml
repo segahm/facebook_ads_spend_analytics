@@ -7,7 +7,7 @@ view: fb_insights_actions {
         , _sdc_source_key_ad_id
         , _sdc_source_key_date_start
         , value
-        , ARRAY_TO_STRING(ARRAY(SELECT unnest(array_agg(DISTINCT fb_insights_actions.action_type )) ORDER BY 1),'|RECORD|') AS actions
+        , ARRAY_TO_STRING(ARRAY(SELECT unnest(array_agg(DISTINCT fb_insights_actions.action_type )) ORDER BY 1),'|') AS actions
       FROM facebook_ads.facebook_ads_insights_22273255__actions AS fb_insights_actions
       GROUP BY 1, 2, 3, 4
       )
@@ -132,17 +132,36 @@ view: fb_insights_actions {
     type: string
     sql: ${TABLE}.actions ;;
   }
+#   dimension: action {
+#     type:  string
+#     sql:  string_to_array(${actions},'|','|RECORD|') ;;
+#   }
+
+  measure: all_actions {
+    type: list
+    list_field: actions
+  }
+  dimension:  is_link_click {
+    type: yesno
+    sql: ${actions} LIKE '%link_click%' ;;
+  }
+
+  dimension:  is_like{
+    type: yesno
+    sql: ${actions} LIKE '%like%';;
+  }
+
   dimension: value {
     type: number
-#     hidden:  yes
+    hidden:  yes
     sql: ${TABLE}.value ;;
   }
   measure:  total_link_clicks {
     sql: ${value} ;;
     type:  sum
     filters: {
-      field: actions
-      value: "%link_click%"
+      field: is_link_click
+      value: "yes"
     }
   }
 
@@ -150,8 +169,8 @@ view: fb_insights_actions {
     sql: ${value} ;;
     type:  sum
     filters: {
-      field: actions
-      value: "%like%"
+      field: is_like
+      value: "yes"
     }
   }
 

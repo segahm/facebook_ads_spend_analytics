@@ -8,6 +8,40 @@ view: fb_creative {
     sql: ${TABLE}.id ;;
   }
 
+  dimension:  utm_medium {
+    sql:
+      CASE WHEN ${url_tags} LIKE '%utm_medium%'
+            THEN SPLIT_PART(SPLIT_PART(${url_tags},'utm_medium=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
+  dimension:  utm_source {
+    sql:
+      CASE WHEN ${url_tags} LIKE '%utm_source%'
+            THEN SPLIT_PART(SPLIT_PART(${url_tags},'utm_source=',2),'&',1)
+       ELSE NULL END ;;
+  }
+  dimension:  utm_term {
+    sql:
+      CASE WHEN ${url_tags} LIKE '%utm_term%'
+            THEN SPLIT_PART(SPLIT_PART(${url_tags},'utm_term=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
+  dimension:  utm_campaign {
+    sql:
+      CASE WHEN ${url_tags} LIKE '%utm_campaign%'
+            THEN SPLIT_PART(SPLIT_PART(${url_tags},'utm_campaign=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
+  dimension:  utm_content {
+    sql:
+      CASE WHEN ${url_tags} LIKE '%utm_content%'
+            THEN SPLIT_PART(SPLIT_PART(${url_tags},'utm_content=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
   dimension: link_url {
     type: string
     sql: ${TABLE}.link_url ;;

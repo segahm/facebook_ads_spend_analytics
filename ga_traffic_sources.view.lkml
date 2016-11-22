@@ -3,6 +3,7 @@ view: ga_traffic_sources {
 
   dimension: _rjm_record_hash {
     type: string
+    primary_key: yes
     sql: ${TABLE}._rjm_record_hash ;;
   }
 
@@ -40,8 +41,8 @@ view: ga_traffic_sources {
 
   dimension_group: date_hour {
     type: time
-    timeframes: [time, date, week, month]
-    sql: ${TABLE}.dateHour ;;
+    timeframes: [time, date, week, month, raw]
+    sql: ${TABLE}."dateHour" ;;
   }
 
   dimension_group: enddate {
@@ -62,7 +63,7 @@ view: ga_traffic_sources {
 
   dimension: new_users {
     type: number
-    sql: ${TABLE}.newUsers ;;
+    sql: ${TABLE}."newUsers" ;;
   }
   measure:  total_hits {
     type:  sum
@@ -86,7 +87,7 @@ view: ga_traffic_sources {
 
   dimension: social_network {
     type: string
-    sql: ${TABLE}.socialNetwork ;;
+    sql: ${TABLE}."socialNetwork" ;;
   }
 
   dimension: source {
@@ -96,7 +97,7 @@ view: ga_traffic_sources {
 
   dimension: source_medium {
     type: string
-    sql: ${TABLE}.sourceMedium ;;
+    sql: ${TABLE}."sourceMedium" ;;
   }
 
   dimension_group: startdate {
