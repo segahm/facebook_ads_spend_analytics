@@ -4,6 +4,10 @@ view: fb_insights {
     primary_key: yes
     sql: md5(CONCAT(${ad_id},${date_start_raw})) ;;
   }
+  measure:  count {
+    type: count
+  }
+
 #   dimension_group: _sdc_batched {
 #     type: time
 #     timeframes: [time, date, week, month]
@@ -319,17 +323,17 @@ view: fb_insights {
     sql: ${TABLE}.unique_social_impressions ;;
   }
 
-  dimension: website_clicks {
-    type: number
-    sql: ${TABLE}.website_clicks ;;
-  }
+#   dimension: website_clicks {
+#     type: number
+#     sql: ${TABLE}.website_clicks ;;
+#   }
 
 #   AGGREGATED MEASURES
-
-  measure: total_website_clicks {
-    type: sum
-    sql: ${website_clicks} ;;
-  }
+# AVOID website_clicks - seems off
+#   measure: total_website_clicks {
+#     type: sum
+#     sql: ${website_clicks} ;;
+#   }
 
   measure:  total_spend_on_clicks {
     type: sum
@@ -351,11 +355,12 @@ view: fb_insights {
     type: sum
     sql: ${TABLE}.total_actions ;;
   }
-
-  measure: avg_ctr {
+  measure: avg_cpc {
+    label: "Reported CPC"
+    description: "average"
     value_format_name: usd
-    type: average
-    sql: ${TABLE}.ctr ;;
+    type: number
+    sql: ${total_spend_on_clicks} / NULLIF(${total_clicks},0) ;;
   }
   measure:  total_impressions {
     type: sum

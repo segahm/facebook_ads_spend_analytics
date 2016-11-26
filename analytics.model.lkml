@@ -5,7 +5,7 @@ include: "*.view"
 
 # include all the dashboards
 include: "*.dashboard"
-
+explore: yandex_minute_visits {}
 
 explore:  facebook {
   view_name: fb_insights
@@ -53,7 +53,7 @@ explore:  facebook {
     sql_on: ${fb_insights.ad_id} = ${fb_ads.id} ;;
   }
   join: fb_creative {
-    relationship:  one_to_one
+    relationship:  many_to_one
     sql_on: ${fb_ads.creative__id} = ${fb_creative.id} ;;
   }
   join: site_visits {
@@ -93,6 +93,22 @@ explore:  facebook {
       AND ${fb_creative.utm_medium} = ${ga_sources_utm.medium}
       AND ${ga_sources_utm.source} = 'facebook'
       AND ${fb_insights.date_start_date} = ${ga_sources_utm.start_date};;
+  }
+
+  join: yandex_utm {
+    from: yandex_minute_visits
+    relationship: many_to_many
+    sql_on:
+      ${yandex_utm.source} = 'facebook'
+      AND
+      ${fb_creative.utm_campaign} = ${yandex_utm.utm_campaign}
+      AND
+      ${fb_creative.utm_medium} = ${yandex_utm.utm_medium}
+      AND
+      ${fb_creative.utm_content} = ${yandex_utm.utm_content}
+      AND
+      ${fb_creative.utm_term} = ${yandex_utm.utm_term};;
+#     AND ${fb_insights.date_start_date} = ${yandex_utm.minute_of_visit_date};;
   }
 
 #   join:  heap_utm {

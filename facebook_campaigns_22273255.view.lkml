@@ -10,6 +10,8 @@ view: campaign_actions {
           = (md5(CONCAT(
               fb_insights_actions._sdc_source_key_ad_id
               ,fb_insights_actions._sdc_source_key_date_start)))
+      WHERE
+        value IS NOT NULL
       GROUP BY 1;;
   }
 
@@ -88,6 +90,11 @@ view: fb_campaign {
   dimension: objective {
     type: string
     sql: ${TABLE}.objective ;;
+  }
+
+  dimension: is_objective_like {
+    type: yesno
+    sql: ${objective} = 'PAGE_LIKES' ;;
   }
 
 

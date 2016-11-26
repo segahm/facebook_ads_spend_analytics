@@ -36,17 +36,17 @@ view: fb_adset {
 
   dimension: bid_info__actions {
     type: number
-    sql: ${TABLE}.bid_info__ACTIONS ;;
+    sql: ${TABLE}."bid_info__ACTIONS" ;;
   }
 
   dimension: bid_info__impressions {
     type: number
-    sql: ${TABLE}.bid_info__IMPRESSIONS ;;
+    sql: ${TABLE}."bid_info__IMPRESSIONS" ;;
   }
 
   dimension: bid_info__reach {
     type: number
-    sql: ${TABLE}.bid_info__REACH ;;
+    sql: ${TABLE}."bid_info__REACH" ;;
   }
 
   dimension: budget_remaining {

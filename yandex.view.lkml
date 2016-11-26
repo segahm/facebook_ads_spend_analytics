@@ -1,4 +1,3 @@
-explore: yandex {}
 view: yandex {
   sql_table_name: public.yandex ;;
   dimension: visit_id  {
@@ -56,6 +55,30 @@ view: yandex {
        ELSE NULL END ;;
   }
 
+  dimension: utm_term {
+    type: string
+    sql:
+      CASE WHEN ${landing_page_path} LIKE '%utm_term%'
+            THEN SPLIT_PART(SPLIT_PART(${landing_page_path},'utm_term=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
+  dimension: utm_content {
+    type: string
+    sql:
+      CASE WHEN ${landing_page_path} LIKE '%utm_content%'
+            THEN SPLIT_PART(SPLIT_PART(${landing_page_path},'utm_content=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
+  dimension: utm_campaign {
+    type: string
+    sql:
+      CASE WHEN ${landing_page_path} LIKE '%utm_campaign%'
+            THEN SPLIT_PART(SPLIT_PART(${landing_page_path},'utm_campaign=',2),'&',1)
+       ELSE NULL END ;;
+  }
+
   dimension: users {
     type: number
     sql: ${TABLE}.users ;;
@@ -72,8 +95,13 @@ view: yandex {
   }
 
   dimension: visit_duration {
-    type: string
+    type: number
     sql: ${TABLE}.visit_duration ;;
+  }
+
+  measure: avg_session_duration {
+    type: average
+    sql: ${visit_duration} ;;
   }
 
   measure: count {

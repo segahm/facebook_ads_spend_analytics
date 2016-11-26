@@ -151,9 +151,37 @@ view: fb_insights_actions {
     sql: ${actions} LIKE '%like%';;
   }
 
+  dimension:  is_engagement{
+    type: yesno
+    sql: ${actions} LIKE '%engagement%';;
+  }
+
+  dimension:  is_post{
+    type: yesno
+    sql: ${actions} LIKE '%post%';;
+  }
+
+  measure:  total_engagement {
+    sql: ${value} ;;
+    type:  sum
+    filters: {
+      field: is_engagement
+      value: "yes"
+    }
+  }
+
+  measure:  total_posts {
+    sql: ${value} ;;
+    type:  sum
+    filters: {
+      field: is_post
+      value: "yes"
+    }
+  }
+
   dimension: value {
     type: number
-    hidden:  yes
+#     hidden:  yes
     sql: ${TABLE}.value ;;
   }
   measure:  total_link_clicks {

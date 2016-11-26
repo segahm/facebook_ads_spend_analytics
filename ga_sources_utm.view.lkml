@@ -29,9 +29,20 @@ view: ga_sources_utm {
 #     sql: ${TABLE}._sdc_table_version ;;
 #   }
 
-  dimension: avg_session_duration {
+#   dimension: avg_session_duration {
+#     type: number
+#     sql: ${TABLE}."avgSessionDuration" ;;
+#   }
+  measure: total_session_duration {
+    type: sum
+    hidden: yes
+    sql: ${TABLE}."avgSessionDuration" * ${users} ;;
+  }
+
+  measure: avg_session_duration {
     type: number
-    sql: ${TABLE}."avgSessionDuration" ;;
+    value_format_name: decimal_1
+    sql: ${total_session_duration} / NULLIF(${total_users},0);;
   }
 
   dimension: campaign {
