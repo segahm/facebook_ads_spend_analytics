@@ -1,8 +1,17 @@
 view: fb_insights {
-  sql_table_name: facebook_ads.facebook_ads_insights_22273255 ;;
+  derived_table: {
+    persist_for: "360 hours"
+    indexes: ["adset_id"]
+    sql:
+      SELECT
+        md5(CONCAT(ad_id,date_start)) AS pk
+        , *
+      FROM facebook_ads.facebook_ads_insights_22273255
+    ;;
+  }
   dimension: pk {
     primary_key: yes
-    sql: md5(CONCAT(${ad_id},${date_start_raw})) ;;
+    hidden: yes
   }
   measure:  count {
     type: count
@@ -155,9 +164,21 @@ view: fb_insights {
   }
 
   dimension_group: date_start {
+    label: "Reporting Date"
     type: time
     timeframes: [date, week, month, raw]
     sql: ${TABLE}.date_start ;;
+  }
+
+  dimension_group: observation {
+    type: time
+    timeframes: [date, week, month, raw]
+    sql: ${date_start_raw} - interval '1 day' ;;
+  }
+
+  dimension: days_since_ad_launch {
+    type: number
+    sql: DATE_PART('day', ${date_start_date}::timestamp - ${fb_adset.start_date}::timestamp ) ;;
   }
 #
 #   dimension_group: date_stop {
@@ -356,7 +377,7 @@ view: fb_insights {
     sql: ${TABLE}.total_actions ;;
   }
   measure: avg_cpc {
-    label: "Reported CPC"
+    label: "Reported Cost per Action"
     description: "average"
     value_format_name: usd
     type: number

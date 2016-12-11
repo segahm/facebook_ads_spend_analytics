@@ -1,15 +1,18 @@
 view: yandex_minute_visits {
-  sql_table_name: site_visits.yandex_minute_visits ;;
+  derived_table: {
+    persist_for: "360 hours"
+    indexes: ["minute_of_visit"]
+    sql:
+      SELECT
+        md5(CONCAT(minute_of_visit,referer_path_full_)) AS pk
+        , *
+      FROM site_visits.yandex_minute_visits
+        ;;
+  }
 
   dimension: pk {
     primary_key: yes
-    hidden: yes
-    sql: CONCAT(${minute_of_visit_raw},referer_path_full_) ;;
-  }
-  dimension: refer_hash {
-    type:  string
-    sql: md5(CONCAT(${utm_campaign},${utm_medium}
-        , ${utm_content},${utm_term}, ${utm_source})) ;;
+#     hidden: yes
   }
 
   dimension: java_script_present {
@@ -40,11 +43,13 @@ view: yandex_minute_visits {
 
   dimension: referer_path_full_ {
     type: string
+#     hidden: yes
     sql: ${TABLE}.referer_path_full_ ;;
   }
 
   dimension: decoded_path {
     type: string
+#     hidden: yes
     sql: decode_url_part(${referer_path_full_}) ;;
   }
 
@@ -54,7 +59,7 @@ view: yandex_minute_visits {
         label: "facebook"
         sql: ${referrer_domain} iLIKE '%facebook%'
             OR  ${referrer_domain} iLIKE '%instagram%'
-            OR ${utm_source} iLIKE 'facebook';;
+            OR ${utm_source} iLIKE '%facebook%';;
       }
     }
   }
@@ -63,7 +68,7 @@ view: yandex_minute_visits {
     sql:
       (CASE WHEN ${decoded_path} LIKE '%utm_source%'
             THEN SPLIT_PART(SPLIT_PART(${decoded_path},'utm_source=',2),'&',1)
-       ELSE '' END) ;;
+       ELSE NULL END) ;;
   }
 
   dimension:  utm_content {
@@ -77,21 +82,21 @@ view: yandex_minute_visits {
     sql:
       (CASE WHEN ${decoded_path} LIKE '%utm_term%'
             THEN SPLIT_PART(SPLIT_PART(${decoded_path},'utm_term=',2),'&',1)
-       ELSE '' END) ;;
+       ELSE NULL END) ;;
   }
 
   dimension:  utm_campaign {
     sql:
       (CASE WHEN ${decoded_path} LIKE '%utm_campaign%'
             THEN SPLIT_PART(SPLIT_PART(${decoded_path},'utm_campaign=',2),'&',1)
-       ELSE '' END) ;;
+       ELSE NULL END) ;;
   }
 
   dimension:  utm_medium {
     sql:
       (CASE WHEN ${decoded_path} LIKE '%utm_medium%'
             THEN SPLIT_PART(SPLIT_PART(${decoded_path},'utm_medium=',2),'&',1)
-       ELSE '' END) ;;
+       ELSE NULL END) ;;
   }
 
   dimension: referrer_domain {
@@ -105,8 +110,8 @@ view: yandex_minute_visits {
   }
 
   dimension: time_on_site {
-    type: string
-    sql: ${TABLE}.time_on_site ;;
+    type: number
+    sql: CAST(${TABLE}.time_on_site AS INT) ;;
   }
 
   dimension: users {

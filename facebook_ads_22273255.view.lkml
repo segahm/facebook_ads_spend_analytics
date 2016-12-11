@@ -66,7 +66,7 @@ view: fb_ads {
 
   dimension_group: created {
     type: time
-    timeframes: [time, date, week, month]
+    timeframes: [time, date, week, month, raw]
     sql: ${TABLE}.created_time ;;
   }
 
@@ -103,6 +103,6 @@ view: fb_ads {
 
   measure: count {
     type: count
-    drill_fields: [id, name]
+    drill_fields: [id, name, bid_type]
   }
 }

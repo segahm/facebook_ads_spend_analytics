@@ -55,10 +55,11 @@ view: site_visits {
     sql:
       (CASE WHEN ${type} = 'yandex' THEN ${yandex.visit_id}
       WHEN ${type} = 'heap' THEN ${heap.user_id}
-      WHEN ${type} = 'google' THEN ${ga_traffic_sources._rjm_record_hash}
       ELSE NULL
       END);;
   }
+#   WHEN ${type} = 'google' THEN ${ga_traffic_sources._rjm_record_hash}
+
 #   measure: facebook_visits {
 #     type:  count_distinct
 #     filters: {

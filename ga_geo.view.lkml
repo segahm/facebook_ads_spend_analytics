@@ -47,6 +47,7 @@ view: ga_geo {
   dimension: country {
     type: string
     sql: ${TABLE}.country ;;
+    drill_fields: [city]
   }
 
   dimension_group: date_hour {

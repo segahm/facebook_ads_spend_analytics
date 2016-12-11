@@ -58,7 +58,12 @@ view: heap {
 
   dimension: initial_utm_source {
     type: string
-    sql: ${TABLE}.initial_utm_source ;;
+    sql:
+      CASE
+        WHEN ${initial_referrer} LIKE '%facebook%'
+              OR ${initial_referrer} LIKE '%instagram%'
+              OR ${TABLE}.initial_utm_source iLIKE 'facebook' THEN 'facebook'
+        END;;
   }
 
 #   dimension: initial_utm_term {

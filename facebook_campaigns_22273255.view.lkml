@@ -1,5 +1,7 @@
 view: campaign_actions {
   derived_table: {
+    persist_for: "360 hours"
+    indexes: ["campaign_id"]
     sql:
      SELECT
         fb_insights.campaign_id AS campaign_id

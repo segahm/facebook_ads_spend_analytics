@@ -107,9 +107,9 @@ view: ga_sources_utm {
     type:  sum
     sql: ${users} ;;
   }
-#
-#   measure: count {
-#     type: count
-#     drill_fields: []
-#   }
+
+  measure: count {
+    type: count
+    drill_fields: []
+  }
 }
